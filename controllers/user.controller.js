@@ -9,30 +9,17 @@ import { generateTokens } from "../utils/jwt.js"
 
 export const login = async (req, res) => {
     try {
-        console.log("data")
-
-        const data = await prisma.User.findUnique({
-            where: {
-                // AND: [
-                //     {
-                //         email: {
-                //             equals: req.body.email,
-                //         },
-                //     },
-                //     {
-                //         password: {
-                //             equals: req.body.password,
-                //         },
-                //     },
-                // ],
-                email: req.body.email,
-            },
+        // const data = await prisma.User.findUnique({
+        //     where: {
+        //         email: req.body.email,
+        //     },
+        // })
+        const data = await User.findOne({
+            email: req.body.email,
         })
         const validPassword = await bcrypt.compare(req.body.password, data.password);
         if (!validPassword) {
-            // res.status(403);
             res.send({ data, succeeded: false, status: 403, message: "Invalid Credentials" })
-            // throw new Error('Invalid login credentials.');
             return
         }
         const accessToken = generateTokens(data);
@@ -70,7 +57,8 @@ export const register = async (req, res) => {
 
         const accessToken = generateTokens(data);
         data.token = accessToken;
-        res.send({ data, succeeded: true, status: 200, message: "User created Successfully" })
+
+        res.send({ data: data, succeeded: true, status: 200, message: "User created Successfully" })
 
     } catch (e) {
         res.send({ succeeded: false, status: 404, message: e.message })
@@ -78,10 +66,11 @@ export const register = async (req, res) => {
 }
 
 
-export const getAllPatients = async (req, res) => {
+export const getAllUsers = async (req, res) => {
 
     try {
-        const data = await prisma.User.findMany()
+        // const data = await prisma.User.findMany()
+        const data = await User.find()
         res.send({ data, succeeded: true, status: 200, message: "Users get Successfully" })
     } catch (err) {
         res.send({ data: [], succeeded: false, status: 400, message: err.message })
@@ -89,38 +78,45 @@ export const getAllPatients = async (req, res) => {
 
 }
 
-export const createPatient = async (req, res) => {
+export const createUser = async (req, res) => {
     try {
-        const data = await prisma.User.create({
-            data:
-            {
-                ...req.body
-            },
-        })
-        res.send({ data, succeeded: true, status: 200, message: "User created Successfully" })
+        // const data = await prisma.User.create({
+        //     data:
+        //     {
+        //         ...req.body
+        //     },
+        // })
+        const data = new User(req.body);
+        const finalData = data.save()
+        res.send({ finalData, succeeded: true, status: 200, message: "User created Successfully" })
     } catch (err) {
-        res.send({ data: null, succeeded: false, status: 400, message: err.message })
+        res.send({ finalData: null, succeeded: false, status: 400, message: err.message })
     }
 }
 
-export const getPatientById = async (req, res) => {
+export const getUserById = async (req, res) => {
     try {
-        const data = await prisma.User.findUnique({
-            where: { id: +req.params.id }
-        })
+        // const data = await prisma.User.findUnique({
+        //     where: { id: +req.params.id }
+        // })
+
+        const data = await User.findOne({ _id: req.params.id })
         res.send({ data, succeeded: true, status: 200, message: "User get Successfully" })
     } catch (error) {
         res.send({ data: null, succeeded: false, status: 400, message: error.message })
     }
 }
 
-export const updatePatient = async (req, res) => {
+export const updateUser = async (req, res) => {
     try {
-        const data = await prisma.User.update({
-            where: { id: +req.params.id },
-            data: {
-                ...req.body, dob: `${moment(req.body.dob).format("YYYY-MM-DD")}`
-            },
+        // const data = await prisma.User.update({
+        //     where: { id: +req.params.id },
+        //     data: {
+        //         ...req.body, dob: `${moment(req.body.dob).format("YYYY-MM-DD")}`
+        //     },
+        // })
+        const data = findOneAndUpdate({ _id: req.params.id }, {
+            ...req.body, dob: `${moment(req.body.dob).format("YYYY-MM-DD")}`
         })
         res.send({ data, succeeded: true, status: 200, message: "User updated Successfully" })
     } catch (err) {
@@ -128,11 +124,12 @@ export const updatePatient = async (req, res) => {
     }
 }
 
-export const deletePatient = async (req, res) => {
+export const deleteUser = async (req, res) => {
     try {
-        const data = await prisma.User.delete({
-            where: { id: +req.params.id }
-        })
+        // const data = await prisma.User.delete({
+        //     where: { id: +req.params.id }
+        // })
+        const data = await User.deleteOne({ _id: req.params.id })
         res.send({ data, succeeded: true, status: 200, message: "User deleted Successfully" })
     } catch (err) {
         res.send({ data: [], succeeded: false, status: 400, message: err.message })

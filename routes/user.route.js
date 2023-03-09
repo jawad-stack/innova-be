@@ -1,5 +1,5 @@
 import express from "express"
-import { createPatient, deletePatient, getAllPatients, getPatientById, login, register, updatePatient } from "../controllers/user.controller.js";
+import { createUser, deleteUser, getAllUsers, getUserById, login, register, updateUser } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -7,14 +7,14 @@ router.post('/register', register)
 
 router.post('/login', login)
 
-router.get('/patient/getAll', getAllPatients)
+router.get('/user/getAll', getAllUsers)
 
-router.post('/patient/create', createPatient)
+router.post('/user/create', createUser)
 
-router.get('/patient/:id', getPatientById)
+router.get('/user/:id', getUserById)
 
-router.put('/patient/update/:id', updatePatient)
+router.put('/user/update/:id', updateUser)
 
-router.delete('/patient/delete/:id', deletePatient)
+router.delete('/user/delete/:id', deleteUser)
 
 export default router;
