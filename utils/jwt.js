@@ -2,7 +2,6 @@
 import jwt from "jsonwebtoken"
 
 function generateAccessToken(user) {
-    console.log("generating access token", user)
     return jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, {
         expiresIn: '8h',
     });
