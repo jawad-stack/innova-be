@@ -3,10 +3,15 @@ import swaggerUi from "swagger-ui-express"
 import swaggerJSdoc from "swagger-jsdoc"
 import cors from "cors"
 import userRoute from "./routes/user.route.js"
+import productRoute from "./routes/product.route.js"
 import mongoose from 'mongoose';
+import { authMiddleware } from "./utils/authMiddleware.js"
+import cookieParser from "cookie-parser"
+
 
 
 const app = express();
+app.use(cookieParser());
 app.use(cors())
 
 const options = {
@@ -32,5 +37,6 @@ mongoose.connect("mongodb+srv://jawadiqbal962:olx123@olx.5mpfkje.mongodb.net/?re
 const PORT = process.env.PORT || 5000;
 
 app.use("/api/user", userRoute)
+app.use("/api/product", authMiddleware, productRoute)
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));

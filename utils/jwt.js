@@ -2,7 +2,7 @@
 import jwt from "jsonwebtoken"
 
 function generateAccessToken(user) {
-    return jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, {
+    return jwt.sign({ user: user }, "123", {
         expiresIn: '8h',
     });
 }

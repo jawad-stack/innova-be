@@ -1,8 +1,8 @@
 import moment from "moment"
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { User } from "../model/user.model.js"
-const prisma = new PrismaClient()
+// const prisma = new PrismaClient()
 
 // import { v4 } from "uuid"
 import { generateTokens } from "../utils/jwt.js"
@@ -14,7 +14,7 @@ export const login = async (req, res) => {
         //         email: req.body.email,
         //     },
         // })
-        const data = await User.findOne({
+        let data = await User.findOne({
             email: req.body.email,
         })
         const validPassword = await bcrypt.compare(req.body.password, data.password);
@@ -23,10 +23,9 @@ export const login = async (req, res) => {
             return
         }
         const accessToken = generateTokens(data);
-
-        data.token = accessToken;
-
-        res.send({ data, succeeded: true, status: 200, message: "Logged in Successfully" })
+        data = { ...data._doc, accessToken }
+        res.cookie('user', JSON.stringify(data));
+        res.status(200).json({ data: data, succeeded: true, status: 200, message: "Logged in Successfully" })
 
     } catch (e) {
         res.send({ succeeded: false, status: res.statusCode, message: e.message, })
@@ -75,7 +74,6 @@ export const getAllUsers = async (req, res) => {
     } catch (err) {
         res.send({ data: [], succeeded: false, status: 400, message: err.message })
     }
-
 }
 
 export const createUser = async (req, res) => {
