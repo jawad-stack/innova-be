@@ -1,5 +1,6 @@
 import express from "express"
 import { createUser, deleteUser, getAllUsers, getUserById, login, register, updateUser } from "../controllers/user.controller.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = express.Router();
 
@@ -7,14 +8,14 @@ router.post('/register', register)
 
 router.post('/login', login)
 
-router.get('/user/getAll', getAllUsers)
+router.get('/getAll', authMiddleware, getAllUsers)
 
-router.post('/user/create', createUser)
+router.post('/create', authMiddleware, createUser)
 
-router.get('/user/:id', getUserById)
+router.get('/:id', authMiddleware, getUserById)
 
-router.put('/user/update/:id', updateUser)
+router.put('/update/:id', authMiddleware, updateUser)
 
-router.delete('/user/delete/:id', deleteUser)
+router.delete('/delete/:id', authMiddleware, deleteUser)
 
 export default router;
