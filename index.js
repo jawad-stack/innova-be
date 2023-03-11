@@ -4,6 +4,7 @@ import swaggerJSdoc from "swagger-jsdoc"
 import cors from "cors"
 import userRoute from "./routes/user.route.js"
 import productRoute from "./routes/product.route.js"
+import orderRoute from "./routes/order.route.js"
 import mongoose from 'mongoose';
 import { authMiddleware } from "./utils/authMiddleware.js"
 import cookieParser from "cookie-parser"
@@ -38,5 +39,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/api/user", userRoute)
 app.use("/api/product", authMiddleware, productRoute)
+app.use("/api/order", authMiddleware, orderRoute)
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));

@@ -3,7 +3,7 @@ import { Product } from "../model/product.model.js";
 export const createProduct = async (req, res, next) => {
 
     try {
-        const { name, description, price, images, category, location } = req.body;
+        const { name, description, price, images, category, location, quantity } = req.body;
         const seller = req.user._id; // assuming you have user authentication implemented
         const product = new Product({
             name,
@@ -11,6 +11,7 @@ export const createProduct = async (req, res, next) => {
             price,
             images,
             seller,
+            quantity,
             category,
             location,
         });

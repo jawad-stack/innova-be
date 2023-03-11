@@ -1,8 +1,8 @@
 
 
 import mongoose from "mongoose";
+import { PRODUCT_STATUS } from "../utils/config.js";
 
-const Schema = mongoose.Schema;
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -32,6 +32,16 @@ const productSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true,
+    },
+    statusId: {
+        type: Number,
+        enum: [PRODUCT_STATUS.Active, PRODUCT_STATUS.Sold, PRODUCT_STATUS.Expired],
+        default: PRODUCT_STATUS.Active
+    },
+    quantity: {
+        type: Number,
+        default: 1,
+        min: 1
     },
     createdAt: {
         type: Date,
