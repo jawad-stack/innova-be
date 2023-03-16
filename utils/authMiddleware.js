@@ -4,7 +4,13 @@ export const authMiddleware = (req, res, next) => {
     // Get the token from the request headers
 
     // const token = req.headers.authorization?.split(' ')[1];
-    const userCookie = JSON.parse(req?.cookies?.user)
+    let userCookie;
+    if (req?.cookies?.user) {
+        userCookie = JSON.parse(req?.cookies?.user)
+
+    } else {
+        return res.status(401).json({ message: 'Authentication required', status: 401, succeeded: false });
+    }
     const token = userCookie?.accessToken
 
     if (!token) {
