@@ -8,6 +8,7 @@ import orderRoute from "./routes/order.route.js"
 import mongoose from 'mongoose';
 import { authMiddleware } from "./utils/authMiddleware.js"
 import cookieParser from "cookie-parser"
+import { options } from "./utils/swaggerDocumentation.js"
 
 
 
@@ -15,19 +16,6 @@ const app = express();
 app.use(cookieParser());
 app.use(cors())
 
-const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "Innova",
-            version: "1.0.0",
-        },
-        servers: [{
-            url: 'http://localhost:5000'
-        }],
-    },
-    apis: ['./index.js'],
-}
 
 const swaggerSpec = swaggerJSdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
